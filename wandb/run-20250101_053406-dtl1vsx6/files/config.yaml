@@ -1,0 +1,143 @@
+_wandb:
+    value:
+        cli_version: 0.19.1
+        m: []
+        python_version: 3.9.12
+        t:
+            "1":
+                - 1
+                - 50
+                - 55
+                - 79
+            "2":
+                - 1
+                - 50
+                - 55
+                - 79
+            "3":
+                - 16
+                - 23
+                - 55
+            "4": 3.9.12
+            "5": 0.19.1
+            "8":
+                - 8
+            "12": 0.19.1
+            "13": linux-x86_64
+agent:
+    value:
+        action_size: 6
+        aug_target: true
+        aug_types:
+            - random_shift
+            - intensity
+        batch_size: 32
+        buffer:
+            n_step: 10
+            prior_exp: 0.5
+            prior_weight_scheduler:
+                final_value: 1
+                initial_value: 0.4
+                step_size: None
+            size: 100000
+            type: per_buffer
+        clip_grad_norm: 10
+        double: true
+        eps_scheduler:
+            final_value: 0
+            initial_value: 1
+            step_size: 1
+        eval_eigen: false
+        eval_eps: 0.001
+        evaluate_freq: 200
+        exploration_model: target
+        gamma: 0.99
+        log_freq: 1000
+        mask_ratio: 0
+        min_buffer_size: 2000
+        noise_scheduler:
+            final_value: 1
+            initial_value: 1
+            step_size: 98000
+        num_eval_trajectories: 100
+        num_timesteps: 100000
+        obs_shape:
+            - 4
+            - 1
+            - 84
+            - 84
+        optimize_per_env_step: 2
+        optimizer:
+            betas:
+                - 0.9
+                - 0.999
+            eps: 0.00015
+            lr: 0.0001414
+            type: adam
+            weight_decay: 0
+        plot_histogram: false
+        reset_per_optimize_step: -1
+        reset_target: true
+        reset_type: llf
+        reset_weight_type: random
+        rollout_freq: 100000
+        rollout_model: target
+        shrink_perturb: false
+        shrink_perturb_alpha: 0.6
+        target_tau: 0.99
+        total_optimize_steps: None
+        train_online_mode: train
+        train_target_mode: train
+        type: rainbow
+        update_state_dict: false
+        v_max: 10
+        v_min: -10
+device:
+    value: cuda:0
+entity:
+    value: k1seul_davian
+env:
+    value:
+        frame: 4
+        frame_skip: 4
+        game: pong
+        grayscale: true
+        horizon: 27000
+        seed: 0
+        type: atari
+exp_name:
+    value: test
+group_name:
+    value: test
+model:
+    value:
+        backbone:
+            action_size: 6
+            activation: ReLU
+            init_type: None
+            normalization: None
+            obs_shape:
+                - 4
+                - 1
+                - 84
+                - 84
+            renormalize: false
+            type: nature
+        head:
+            in_dim: None
+            type: identity
+        policy:
+            action_size: 6
+            activation: ReLU
+            duel: true
+            hid_dim: 512
+            in_dim: None
+            noisy_std: 0.5
+            normalization: None
+            num_atoms: 51
+            type: rainbow
+            width: 1
+project_name:
+    value: plastic
+seed:
+    value: 0

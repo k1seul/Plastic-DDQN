@@ -1,0 +1,42 @@
+{
+  "os":  "Linux-6.8.0-49-generic-x86_64-with-glibc2.39",
+  "python":  "CPython 3.9.12",
+  "startedAt":  "2024-12-31T20:51:10.572214Z",
+  "program":  "/home/seul/Desktop/reinforcement_learning/project/run.py",
+  "codePath":  "run.py",
+  "git":  {
+    "remote":  "git@github.com:k1seul/Plastic-DDQN.git",
+    "commit":  "07d97b0c3078841e36b98fb51c1bbc2fce840c92"
+  },
+  "email":  "briankan21@gmail.com",
+  "root":  "/home/seul/Desktop/reinforcement_learning/project",
+  "host":  "SeulServer",
+  "executable":  "/home/seul/miniconda3/envs/atari/bin/python",
+  "codePathLocal":  "run.py",
+  "cpu_count":  6,
+  "cpu_count_logical":  12,
+  "gpu":  "NVIDIA GeForce RTX 4070",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "1005867986944",
+      "used":  "238361063424"
+    }
+  },
+  "memory":  {
+    "total":  "67297271808"
+  },
+  "cpu":  {
+    "count":  6,
+    "countLogical":  12
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 4070",
+      "memoryTotal":  "12878610432",
+      "cudaCores":  5888,
+      "architecture":  "Ada"
+    }
+  ],
+  "cudaVersion":  "12.5"
+}

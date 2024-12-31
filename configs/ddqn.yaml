@@ -1,5 +1,5 @@
 project_name: 'plastic'
-entity: 'test'
+entity: 'k1seul_davian'
 group_name: 'test'
 exp_name: 'test'
 device: cuda:0
