@@ -27,7 +27,7 @@ class MlpPolicy(BasePolicy):
     def _initialize_weights(self):
         for layer in self.fc:
             if isinstance(layer, nn.Linear):
-                init.xavier_normal_(layer.weight, nonlinearity='relu')
+                init.xavier_normal_(layer.weight, gain=init.calculate_gain('relu'))
                 
                 if layer.bias is not None:
                     init.zeros_(layer.bias) 
