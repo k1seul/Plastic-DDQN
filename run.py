@@ -52,6 +52,7 @@ def run(args):
     
     # logger
     logger= WandbAgentLogger(cfg)
+    import pdb; pdb.set_trace()
 
     # model
     model = build_model(cfg.model)
