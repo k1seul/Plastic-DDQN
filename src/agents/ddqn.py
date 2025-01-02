@@ -64,6 +64,7 @@ class DDQN(BaseAgent):
 
       
         square_error = torch.square(target_q - pred_q)
+        abs_error = torch.abs(target_q - pred_q)
         if reduction == 'mean':
             loss = (square_error * weights).mean()
         else:
@@ -71,7 +72,7 @@ class DDQN(BaseAgent):
 
         # update priority
         if (self.buffer.name == 'per_buffer') and (mode == 'train'):
-            self.buffer.update_priorities(idxs=idxs, priorities=square_error.detach().cpu().numpy())
+            self.buffer.update_priorities(idxs=idxs, priorities=abs_error.detach().cpu().numpy())
 
         # prediction and target
         preds = pred_q 
