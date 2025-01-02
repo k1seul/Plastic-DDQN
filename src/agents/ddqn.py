@@ -26,7 +26,6 @@ class DDQN(BaseAgent):
             param.requires_grad = False
 
     def predict(self, model, obs, eps, exp_noise) -> torch.Tensor:
-        # model.policy.reset_noise(scaler=exp_noise)
         q_value, _ = model(obs)
         argmax_action = torch.argmax(q_value, 1).item()
         action = argmax_action
@@ -51,7 +50,6 @@ class DDQN(BaseAgent):
         weights = batch['weights']
 
         # Calculate current state's q-value 
-
         cur_q, _ = online_model(obs_batch)
         act_idx = act_batch.reshape(-1,1)
         pred_q = cur_q.gather(1, act_idx).squeeze(1)
@@ -64,8 +62,7 @@ class DDQN(BaseAgent):
             gamma = (self.cfg.gamma ** self.buffer.n_step)
             target_q = return_batch + (1 - done_batch) * gamma * next_target_q 
 
-                            
-        # kl-divergence 
+      
         square_error = torch.square(target_q - pred_q)
         if reduction == 'mean':
             loss = (square_error * weights).mean()
