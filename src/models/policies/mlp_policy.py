@@ -33,10 +33,9 @@ class MlpPolicy(BasePolicy):
                     init.zeros_(layer.bias) 
 
     def forward(self, x, log=False):
-        
         q = self.fc(x)
         # (batch_size, action_size)
         q = q.view(-1, self.action_size)
         info = {}
         
-        return q, info
+        return q, info 

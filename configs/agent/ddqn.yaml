@@ -1,6 +1,6 @@
 # defaults
 #### Working on: just copyed drq.yaml and changed aug_types to []
-type: 'rainbow'
+type: 'ddqn'
 num_timesteps: 100000 # 100k
 total_optimize_steps: None
 obs_shape: None
@@ -13,7 +13,7 @@ aug_target: True
 buffer: 
     type: 'per_buffer'
     size: 100000
-    n_step: 10
+    n_step: 1
     prior_exp: 0.5 # ω
     prior_weight_scheduler: # β
         initial_value: 0.4
@@ -49,11 +49,7 @@ optimize_per_env_step: 2 # optimization step per frequency
 train_online_mode: 'train'
 train_target_mode: 'train'
 
-# c51
-v_min: -10
-v_max: 10
-
-double: True
+double: False 
 gamma: 0.99
 batch_size: 32
 clip_grad_norm: 10

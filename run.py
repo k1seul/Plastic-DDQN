@@ -55,7 +55,6 @@ def run(args):
 
     # model
     model = build_model(cfg.model)
-    import pdb; pdb.set_trace()
 
     # agent
     agent = build_agent(cfg=cfg.agent,

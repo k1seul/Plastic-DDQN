@@ -28,7 +28,6 @@ def build_model(cfg):
     policy_type = policy_cfg.pop('type')
 
     # backbone
-    import pdb; pdb.set_trace()
     backbone = BACKBONES[backbone_type]
     backbone = backbone(**backbone_cfg)
     
