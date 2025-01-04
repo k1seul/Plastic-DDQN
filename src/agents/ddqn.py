@@ -57,6 +57,7 @@ class DDQN(BaseAgent):
         with torch.no_grad():
             next_online_q, _ = online_model(next_obs_batch)
             next_target_q, _ = target_model(next_obs_batch)
+            next_target_q = next_target_q.detach()
             next_act = torch.argmax(next_online_q, 1).reshape(-1,1)
             next_target_q = next_target_q.gather(1, next_act).squeeze(1)
             gamma = (self.cfg.gamma ** self.buffer.n_step)
