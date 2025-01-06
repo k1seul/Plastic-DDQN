@@ -94,6 +94,9 @@ class BaseAgent(metaclass=ABCMeta):
 
         return rl_loss
     
+    def check_train_step(self, env_step):
+        return env_step % self.cfg.optimize_freq == 0
+            
     def train(self):
         optimize_step = 1
         eps = 1.0
@@ -141,7 +144,7 @@ class BaseAgent(metaclass=ABCMeta):
                     target_model.eval()
 
                 # optimize
-                for _ in range(self.cfg.optimize_per_env_step):
+                for _ in range(self.cfg.optimize_per_env_step) if self.check_train_step(env_step) else []:
                     batch = self.buffer.sample(self.cfg.batch_size, mode='train')
                     
                     # SAM optimizer requires a closure that independently computes loss.
@@ -230,8 +233,9 @@ class BaseAgent(metaclass=ABCMeta):
                     # target_update
                     # if you want to jointly update the buffer information (e.g., running stats from bn),
                     # you should update the state_dict not parameters
-                    for online, target in zip(online_model.parameters(), target_model.parameters()):
-                        target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
+                    if env_step % self.cfg.target_update_freq == 0:
+                        for online, target in zip(online_model.parameters(), target_model.parameters()):
+                            target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
 
                     if self.cfg.update_state_dict:
                         for online, target in zip(online_model.buffers(), target_model.buffers()):
