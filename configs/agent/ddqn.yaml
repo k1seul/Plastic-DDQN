@@ -55,7 +55,7 @@ gamma: 0.99
 batch_size: 32
 clip_grad_norm: 10
 target_update_freq: 8000
-target_tau: 0.99
+target_tau: 0
 update_state_dict: False
 
 # reset
