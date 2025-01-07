@@ -62,7 +62,6 @@ class DDQN(BaseAgent):
             next_target_q = next_target_q.gather(1, next_act).squeeze(1)
             gamma = (self.cfg.gamma ** self.buffer.n_step)
             target_q = return_batch + (1 - done_batch) * gamma * next_target_q 
-
       
         square_error = torch.square(target_q - pred_q)
         abs_error = torch.abs(target_q - pred_q)
