@@ -93,9 +93,6 @@ class BaseAgent(metaclass=ABCMeta):
         rl_loss, preds, targets = self.forward(online_model, target_model, batch, mode='train', reset_noise=reset_noise)
 
         return rl_loss
-    
-    def check_train_step(self, env_step):
-        return env_step % self.cfg.optimize_freq == 0
             
     def train(self):
         optimize_step = 1
