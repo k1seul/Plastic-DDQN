@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('--group_name',   type=str,     default='test')
     parser.add_argument('--exp_name',     type=str,     default='test')
     parser.add_argument('--config_path',  type=str,     default='./configs')
-    parser.add_argument('--config_name',  type=str,     default='drq')
+    parser.add_argument('--config_name',  type=str,     default='ddqn')
     parser.add_argument('--num_games',    type=str,     default=26) 
     parser.add_argument('--games',        type=str,     default=[],      nargs='*')
     parser.add_argument('--excluded_games',      type=str,  default=[],  nargs='*')

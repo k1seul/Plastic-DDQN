@@ -140,7 +140,7 @@ class BaseAgent(metaclass=ABCMeta):
                 else:
                     target_model.eval()
 
-                optim_steps = self.cfg.optimizer_per_env_step if env_step % self.cfg.optimize_freq==0 else 0
+                optim_steps = self.cfg.optimize_per_env_step if env_step % self.cfg.optimize_freq==0 else 0
                 # optimize
                 for _ in range(optim_steps):
                     batch = self.buffer.sample(self.cfg.batch_size, mode='train')

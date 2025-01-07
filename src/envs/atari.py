@@ -265,9 +265,9 @@ atari_nature_scores = dict(
     crazy_climber=114103, demon_attack=9711., freeway=30.3,
     frostbite=328.3, gopher=8520., hero=19950., 
     jamesbond=576.7, kangaroo=6740., krull=3805., 
-    kung_fu_master=23270.,ms_pacman=2311., pong=18.9, 
-    private_eye=1788., qbert=10596., road_runner=18257., 
-    seaquest=5286., up_n_down=8456.
+    kung_fu_master=23270.,ms_pacman=2311., phoenix=10364.0,
+    pong=18.9, private_eye=1788., qbert=10596., 
+    road_runner=18257., seaquest=5286., up_n_down=8456. 
 )
 
 atari_human_scores = dict(
@@ -277,9 +277,9 @@ atari_human_scores = dict(
     crazy_climber=35829.4, demon_attack=1971.0, freeway=29.6, 
     frostbite=4334.7, gopher=2412.5, hero=30826.4, 
     jamesbond=302.8, kangaroo=3035.0, krull=2665.5, 
-    kung_fu_master=22736.3, ms_pacman=6951.6, pong=14.6,
-    private_eye=69571.3, qbert=13455.0, road_runner=7845.0,
-    seaquest=42054.7, up_n_down=11693.2
+    kung_fu_master=22736.3, ms_pacman=6951.6, phoenix=6686.20,
+    pong=14.6, private_eye=69571.3, qbert=13455.0, 
+    road_runner=7845.0, seaquest=42054.7, up_n_down=11693.2
 )
 
 atari_random_scores = dict(
@@ -289,8 +289,8 @@ atari_random_scores = dict(
     crazy_climber=10780.5, demon_attack=152.1, freeway=0.0,
     frostbite=65.2, gopher=257.6, hero=1027.0, 
     jamesbond=29.0, kangaroo=52.0, krull=1598.0, 
-    kung_fu_master=258.5, ms_pacman=307.3, pong=-20.7, 
-    private_eye=24.9, qbert=163.9, road_runner=11.5, 
-    seaquest=68.4, up_n_down=533.4
+    kung_fu_master=258.5, ms_pacman=307.3, phoenix=1134.40,
+    pong=-20.7, private_eye=24.9, qbert=163.9, 
+    road_runner=11.5, seaquest=68.4, up_n_down=533.4
 )
 
