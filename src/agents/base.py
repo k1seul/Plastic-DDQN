@@ -109,7 +109,8 @@ class BaseAgent(metaclass=ABCMeta):
         else:
             exploration_model = self.target_model
 
-        self.rollout()     
+        self.rollout()
+        self.logger.write_log(mode='rollout')     
 
         for env_step in tqdm.tqdm(range(1, self.cfg.num_timesteps+1)):
             ####################
@@ -329,12 +330,14 @@ class BaseAgent(metaclass=ABCMeta):
 
                 if (env_step % self.cfg.rollout_freq == 0) and (self.cfg.rollout_freq != -1):
                     self.rollout()
+                    self.logger.write_log(mode='rollout')
 
                 ################
                 # log
                 if env_step % self.cfg.log_freq == 0:
                     self.logger.write_log(mode='train')
-                    self.logger.write_log(mode='eval')
+                    self.logger.write_log(mode='eval')   
+                    
 
     def evaluate(self):
         EPS = 1e-7
