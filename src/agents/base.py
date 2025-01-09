@@ -107,7 +107,9 @@ class BaseAgent(metaclass=ABCMeta):
         if self.cfg.exploration_model == 'online':
             exploration_model = self.model
         else:
-            exploration_model = self.target_model        
+            exploration_model = self.target_model
+
+        self.rollout()     
 
         for env_step in tqdm.tqdm(range(1, self.cfg.num_timesteps+1)):
             ####################
