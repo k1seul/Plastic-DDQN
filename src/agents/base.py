@@ -337,7 +337,6 @@ class BaseAgent(metaclass=ABCMeta):
                 if env_step % self.cfg.log_freq == 0:
                     self.logger.write_log(mode='train')
                     self.logger.write_log(mode='eval')   
-                    
 
     def evaluate(self):
         EPS = 1e-7
