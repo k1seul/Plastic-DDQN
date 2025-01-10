@@ -1,7 +1,7 @@
 # defaults
 #### Working on: just copyed drq.yaml and changed aug_types to []
 type: 'ddqn'
-num_timesteps: 200_000_000 # 100k
+num_timesteps: 50_000_000 # 50M agent step = 200M env step
 total_optimize_steps: None
 obs_shape: None
 action_size: None
