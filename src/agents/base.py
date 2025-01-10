@@ -93,7 +93,7 @@ class BaseAgent(metaclass=ABCMeta):
         rl_loss, preds, targets = self.forward(online_model, target_model, batch, mode='train', reset_noise=reset_noise)
 
         return rl_loss
-            
+        
     def train(self):
         optimize_step = 1
         eps = 1.0
@@ -241,6 +241,12 @@ class BaseAgent(metaclass=ABCMeta):
                     if self.cfg.update_state_dict:
                         for online, target in zip(online_model.buffers(), target_model.buffers()):
                             target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
+
+                    # plasticity injection 
+                    # to reduce variability between target and online networks, copy online to target
+                    if self.cfg.injection_frame and env_step == self.cfg.injection_frame:
+                        online_model.plasticity_inject()
+                        target_model.copy_online(online_model)
 
                     # reset
                     # 1. decide reset model (original vs random) 

@@ -58,6 +58,9 @@ target_update_freq: 8000
 target_tau: 0
 update_state_dict: False
 
+# plastic_injection
+injection_frame: 50000
+
 # reset
 reset_per_optimize_step: -1 
 reset_target: True
