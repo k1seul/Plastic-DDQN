@@ -359,21 +359,21 @@ class BaseAgent(metaclass=ABCMeta):
                 layer_wise_outputs[layer_id] = output
             return fn
 
-        # def get_all_layers(net, prefix=''):
-        #     for name, layer in net._modules.items():
-        #         if isinstance(layer, nn.Sequential):
-        #             for layer_idx, sub_layer in enumerate(layer):
-        #                 sub_layer.register_forward_hook(
-        #                     save_outputs_hook(
-        #                         prefix + '.' + name + '.' 
-        #                         + sub_layer.__class__.__name__ + '.' + str(layer_idx)
-        #                     )
-        #                 )
-        #         else:
-        #             get_all_layers(layer, prefix)
-
-        # get_all_layers(online_model.backbone, 'backbone')
-        # get_all_layers(online_model.policy, 'policy')
+        def get_all_layers(net, prefix='', hooks_dict=None):
+            if hooks_dict is None:
+                hooks_dict = {}
+            for name, layer in net._modules.items():
+                if isinstance(layer, nn.Sequential):
+                    for layer_idx, sub_layer in enumerate(layer):
+                        hook_name = prefix + '.' + name + '.' + sub_layer.__class__.__name__ + '.' + str(layer_idx)
+                        hook = sub_layer.register_forward_hook(save_outputs_hook(hook_name))
+                        hooks_dict[hook_name] = hook 
+                else:
+                    get_all_layers(layer, prefix)
+            return hooks_dict
+        
+        backbone_hooks = get_all_layers(online_model.backbone, 'backbone')
+        policy_hooks = get_all_layers(online_model.policy, 'policy')
 
         # forward
         batch = self.buffer.sample(self.cfg.batch_size, mode='eval')
@@ -439,6 +439,12 @@ class BaseAgent(metaclass=ABCMeta):
         }
 
         eval_logs.update(ratios)
+        
+        # for memory and computation saving,
+        for hook in backbone_hooks.values():
+            hook.remove()
+        for hook in policy_hooks.values():
+            hook.remove()
 
         return eval_logs 
 
