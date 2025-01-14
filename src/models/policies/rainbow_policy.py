@@ -143,6 +143,7 @@ class RainbowPolicy(BasePolicy):
         q = torch.exp(log_q)
         
         info = {'log': log_q}
+        
         return q, info
 
     def reset_noise(self, **kwargs):
