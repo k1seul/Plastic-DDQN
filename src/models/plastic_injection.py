@@ -35,10 +35,9 @@ class PlasticityInjectionModel(nn.Module):
         return q, {}
 
     def plasticity_inject(self):
+        self.policy._initialize_weights()
         pos_network = copy.deepcopy(self.policy)
         neg_network = copy.deepcopy(self.policy)
-        pos_network._initialize_weights()
-        neg_network._initialize_weights()
         self.pos_networks.append(pos_network)
         self.neg_networks.append(neg_network)
         # The only learnable network is the last positive network. 
