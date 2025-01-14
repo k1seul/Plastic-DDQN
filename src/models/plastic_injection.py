@@ -5,7 +5,24 @@ from .base import Model
 
 
 class PlasticityInjectionModel(nn.Module):
+    """
+    A neural network model for plasticity injection, combining a backbone and a head 
+    with a specified policy.
+
+    Attributes:
+        backbone (nn.Module): The feature extractor component of the model.
+        head (nn.Module): The component that processes features extracted by the backbone.
+        policy (nn.Module): A policy of the model, this is the only part affected by plasticity injection
+    """
     def __init__(self, backbone, head, policy):
+        """
+        Initializes the PlasticityInjectionModel with a backbone, head, and policy.
+
+        Args:
+            backbone (nn.Module): The backbone of the model for feature extraction.
+            head (nn.Module): The head of the model for processing features.
+            policy (nn.Module): A policy of the model, this is the only part affected by plasticity injection
+        """
         super().__init__() 
         self.backbone = backbone
         self.head = head
@@ -32,7 +49,7 @@ class PlasticityInjectionModel(nn.Module):
             'head': h_info,
             'policy': {}
         }
-        return q, {}
+        return q, info
 
     def plasticity_inject(self):
         self.policy._initialize_weights()
@@ -46,6 +63,11 @@ class PlasticityInjectionModel(nn.Module):
                 param.requires_grad = False
         
     def copy_online(self, online_model):
+        """
+        Copy parameters from other models that has been though plasticity injection.
+
+        Args: online_model(nn.Module)
+        """
         for target_net, source_net in zip(self.pos_networks, online_model.pos_networks):
             target_net.load_state_dict(source_net.state_dict())
             for param in target_net.parameters():
