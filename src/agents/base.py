@@ -110,7 +110,7 @@ class BaseAgent(metaclass=ABCMeta):
             exploration_model = self.target_model
 
         self.rollout()
-        self.logger.write_log(mode='rollout')     
+        self.logger.write_log(mode='rollout')
 
         for env_step in tqdm.tqdm(range(1, self.cfg.num_timesteps+1)):
             ####################
