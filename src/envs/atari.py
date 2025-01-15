@@ -89,6 +89,9 @@ class AtariEnv(BaseEnv):
         self._raw_frame_2 = self._max_frame.copy()
         self._obs = np.zeros(shape=obs_shape, dtype="uint8")
 
+        # Sticky actions
+        self.sticky_prob = repeat_action_probability
+
         # Settings
         self._has_fire = "FIRE" in self.get_action_meanings()
         self._has_up = "UP" in self.get_action_meanings()
@@ -112,6 +115,11 @@ class AtariEnv(BaseEnv):
         self.ale.reset_game()
         self._reset_obs()
         self._life_reset()
+
+        # Reset sticky action variables
+        self._last_action = None
+        self._sticky_action = None
+
         if self._max_start_noops > 0:
             for _ in range(self.np_random.randint(1, self._max_start_noops + 1)):
                 self.ale.act(0)
@@ -122,7 +130,16 @@ class AtariEnv(BaseEnv):
         return self.get_obs()
 
     def step(self, action):
-        a = self._action_set[action]
+        """Performs a step in the environment with sticky actions."""
+        # Decide whether to use a sticky action
+        if self._sticky_action is None or self.np_random.uniform() >= self.sticky_prob:
+            self._sticky_action = self._action_set[action]  # Use the current action.
+        else:
+            action = self._last_action  # Reuse the previous action.
+
+        a = self._sticky_action
+        self._last_action = action  # Update last action tracker.
+
         game_score = np.array(0., dtype="float32")
         for _ in range(self._frame_skip - 1):
             game_score += self.ale.act(a)
