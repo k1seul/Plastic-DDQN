@@ -35,7 +35,8 @@ class WandbAgentLogger(object):
     def step(self, state, reward, done, info, mode='train'):
         if mode == 'train':
             self.train_logger.step(state, reward, done, info)
-            self.timestep += 1
+            # agent_step = 4 * env_step
+            self.timestep += self.cfg.env.frame_skip 
 
         elif mode == 'eval':
             self.eval_logger.step(state, reward, done, info)
@@ -51,11 +52,22 @@ class WandbAgentLogger(object):
         if mode == 'train':
             log_data = self.train_logger.fetch_log()
 
-        elif mode == 'eval':
+        elif mode in ('eval', 'rollout'):
             log_data = self.eval_logger.fetch_log()
 
+        rollout_log_keys = {
+            "mean_traj_game_scores",
+            "mean_traj_rewards",
+            "human_normalized_score",
+            "dqn_normalized_score",
+        }
+
         # prefix
-        log_data = {mode+'_'+k: v for k, v in log_data.items() }
+        if mode == "rollout":
+            log_data = {f'eval_{k}': v for k, v in log_data.items() if k in rollout_log_keys}
+        else:
+            log_data = {f"{mode}_{k}": v for k, v in log_data.items() if k not in rollout_log_keys}
+
         wandb.log(log_data, step=self.timestep)
     
     

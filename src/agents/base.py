@@ -93,7 +93,7 @@ class BaseAgent(metaclass=ABCMeta):
         rl_loss, preds, targets = self.forward(online_model, target_model, batch, mode='train', reset_noise=reset_noise)
 
         return rl_loss
-            
+
     def train(self):
         optimize_step = 1
         eps = 1.0
@@ -107,7 +107,10 @@ class BaseAgent(metaclass=ABCMeta):
         if self.cfg.exploration_model == 'online':
             exploration_model = self.model
         else:
-            exploration_model = self.target_model        
+            exploration_model = self.target_model
+
+        self.rollout()
+        self.logger.write_log(mode='rollout')
 
         for env_step in tqdm.tqdm(range(1, self.cfg.num_timesteps+1)):
             ####################
@@ -239,6 +242,12 @@ class BaseAgent(metaclass=ABCMeta):
                         for online, target in zip(online_model.buffers(), target_model.buffers()):
                             target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
 
+                    # plasticity injection 
+                    # to reduce variability between target and online networks, copy online to target
+                    if self.cfg.injection_frame and env_step == self.cfg.injection_frame:
+                        online_model.plasticity_inject()
+                        target_model.copy_online(online_model)
+
                     # reset
                     # 1. decide reset model (original vs random) 
                     # 2. decide which parameters to keep (last vs weight vs gradient)
@@ -327,12 +336,13 @@ class BaseAgent(metaclass=ABCMeta):
 
                 if (env_step % self.cfg.rollout_freq == 0) and (self.cfg.rollout_freq != -1):
                     self.rollout()
+                    self.logger.write_log(mode='rollout')
 
                 ################
                 # log
                 if env_step % self.cfg.log_freq == 0:
                     self.logger.write_log(mode='train')
-                    self.logger.write_log(mode='eval')
+                    self.logger.write_log(mode='eval')   
 
     def evaluate(self):
         EPS = 1e-7
@@ -429,6 +439,12 @@ class BaseAgent(metaclass=ABCMeta):
         }
 
         eval_logs.update(ratios)
+        
+        # for memory and computation saving,
+        for hook in backbone_hooks.values():
+            hook.remove()
+        for hook in policy_hooks.values():
+            hook.remove()
 
         # for memory and computation saving,
         for hook in backbone_hooks.values():

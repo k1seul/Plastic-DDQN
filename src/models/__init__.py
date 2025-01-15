@@ -2,6 +2,7 @@ from .backbones import *
 from .heads import * 
 from .policies import *
 from .base import Model
+from .plastic_injection import PlasticityInjectionModel
 from omegaconf import OmegaConf
 from src.common.class_utils import all_subclasses
 import torch
@@ -51,6 +52,9 @@ def build_model(cfg):
     policy = policy(**policy_cfg)
     
     # model
-    model = Model(backbone=backbone, head=head, policy=policy)
+    if cfg['plastic_injection']:
+        model = PlasticityInjectionModel(backbone=backbone, head=head, policy=policy)
+    else:
+        model = Model(backbone=backbone, head=head, policy=policy)
     
     return model
