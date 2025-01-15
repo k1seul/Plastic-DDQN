@@ -93,7 +93,7 @@ class BaseAgent(metaclass=ABCMeta):
         rl_loss, preds, targets = self.forward(online_model, target_model, batch, mode='train', reset_noise=reset_noise)
 
         return rl_loss
-            
+
     def train(self):
         optimize_step = 1
         eps = 1.0
@@ -242,6 +242,12 @@ class BaseAgent(metaclass=ABCMeta):
                         for online, target in zip(online_model.buffers(), target_model.buffers()):
                             target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
 
+                    # plasticity injection 
+                    # to reduce variability between target and online networks, copy online to target
+                    if self.cfg.injection_frame and env_step == self.cfg.injection_frame:
+                        online_model.plasticity_inject()
+                        target_model.copy_online(online_model)
+
                     # reset
                     # 1. decide reset model (original vs random) 
                     # 2. decide which parameters to keep (last vs weight vs gradient)
@@ -353,21 +359,21 @@ class BaseAgent(metaclass=ABCMeta):
                 layer_wise_outputs[layer_id] = output
             return fn
 
-        def get_all_layers(net, prefix=''):
+        def get_all_layers(net, prefix='', hooks_dict=None):
+            if hooks_dict is None:
+                hooks_dict = {}
             for name, layer in net._modules.items():
                 if isinstance(layer, nn.Sequential):
                     for layer_idx, sub_layer in enumerate(layer):
-                        sub_layer.register_forward_hook(
-                            save_outputs_hook(
-                                prefix + '.' + name + '.' 
-                                + sub_layer.__class__.__name__ + '.' + str(layer_idx)
-                            )
-                        )
+                        hook_name = prefix + '.' + name + '.' + sub_layer.__class__.__name__ + '.' + str(layer_idx)
+                        hook = sub_layer.register_forward_hook(save_outputs_hook(hook_name))
+                        hooks_dict[hook_name] = hook 
                 else:
                     get_all_layers(layer, prefix)
-
-        get_all_layers(online_model.backbone, 'backbone')
-        get_all_layers(online_model.policy, 'policy')
+            return hooks_dict
+        
+        backbone_hooks = get_all_layers(online_model.backbone, 'backbone')
+        policy_hooks = get_all_layers(online_model.policy, 'policy')
 
         # forward
         batch = self.buffer.sample(self.cfg.batch_size, mode='eval')
@@ -433,6 +439,12 @@ class BaseAgent(metaclass=ABCMeta):
         }
 
         eval_logs.update(ratios)
+        
+        # for memory and computation saving,
+        for hook in backbone_hooks.values():
+            hook.remove()
+        for hook in policy_hooks.values():
+            hook.remove()
 
         return eval_logs 
 
