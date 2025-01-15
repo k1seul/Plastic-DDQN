@@ -36,7 +36,7 @@ class WandbAgentLogger(object):
         if mode == 'train':
             self.train_logger.step(state, reward, done, info)
             # agent_step = 4 * env_step
-            self.timestep += 4
+            self.timestep += self.cfg.env.frame_skip 
 
         elif mode == 'eval':
             self.eval_logger.step(state, reward, done, info)

@@ -2,8 +2,8 @@ cd ../..
 
 python run_parallel.py \
     --group_name ddqn \
-    --exp_name ddqn_baseline \
-    --config_name ddqn \
+    --exp_name ddqn_injection \
+    --config_name ddqn_injection \
     --config_path ./configs \
     --seeds 0 1 \
     --num_games 26 \

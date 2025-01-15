@@ -11,6 +11,6 @@ def build_env(cfg):
     env_type = cfg.pop('type')
     env = ENVS[env_type]  
     train_env = env(**cfg)
-    eval_env = env(**cfg)
+    eval_env = env(**cfg, episodic_lives=False)
     
     return train_env, eval_env
