@@ -37,7 +37,7 @@ def build_agent(cfg,
     if buffer_type != str(None):
         buffer = BUFFERS[buffer_type]
         if 'prior_weight_scheduler' in buffer_cfg:
-            buffer_cfg.prior_weight_scheduler.step_size = cfg.total_optimize_steps
+            buffer_cfg.prior_weight_scheduler.step_size = cfg.total_optimize_steps / cfg.optimize_freq
         buffer = buffer(device=device, gamma=cfg['gamma'], **buffer_cfg)
     else:
         buffer = None
