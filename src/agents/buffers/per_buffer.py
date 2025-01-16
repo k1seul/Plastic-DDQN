@@ -7,6 +7,37 @@ from src.common.train_utils import LinearScheduler
 from einops import rearrange
 
 
+class CircularBuffer:
+    def __init__(self, maxlen):
+        self.buffer = [None] * maxlen  # Pre-allocate fixed size
+        self.maxlen = maxlen
+        self.start = 0  # Points to the oldest element
+        self.size = 0   # Number of elements in the buffer
+
+    def append(self, value):
+        # Compute the index where the new element will be added
+        idx = (self.start + self.size) % self.maxlen
+        self.buffer[idx] = value
+
+        if self.size < self.maxlen:
+            # Increment size if not full
+            self.size += 1
+        else:
+            # Move start forward if full
+            self.start = (self.start + 1) % self.maxlen
+
+    def __getitem__(self, index):
+        if index < 0 or index >= self.size:
+            raise IndexError("Index out of bounds")
+        # Map logical index to actual index in the buffer
+        return self.buffer[(self.start + index) % self.maxlen]
+
+    def __repr__(self):
+        # Return the buffer as a list starting from the current `start`
+        return "[" + ", ".join(
+            str(self.buffer[(self.start + i) % self.maxlen]) for i in range(self.size)
+        ) + "]"
+
 # Segment tree data structure where parent node values are sum/max of children node values
 class SegmentTree():
     def __init__(self, size):
@@ -16,7 +47,7 @@ class SegmentTree():
         self.tree_start = 2**(size-1).bit_length()-1  # Put all used node leaves on last tree level
         self.sum_tree = np.zeros((self.tree_start + self.size,), dtype=np.float32)
         # Initialize the buffer
-        self.transitions = deque(maxlen=self.size)
+        self.transitions = CircularBuffer(maxlen=self.size)
         self.max = 1  # Initial max value to return (1 = 1^ω), default transition priority is set to max
 
      # Updates nodes values from current tree
