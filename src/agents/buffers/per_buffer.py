@@ -29,14 +29,7 @@ class CircularBuffer:
     def __getitem__(self, index):
         if index < 0 or index >= self.size:
             raise IndexError("Index out of bounds")
-        # Map logical index to actual index in the buffer
-        return self.buffer[(self.start + index) % self.maxlen]
-
-    def __repr__(self):
-        # Return the buffer as a list starting from the current `start`
-        return "[" + ", ".join(
-            str(self.buffer[(self.start + i) % self.maxlen]) for i in range(self.size)
-        ) + "]"
+        return self.buffer[index]
 
 # Segment tree data structure where parent node values are sum/max of children node values
 class SegmentTree():
