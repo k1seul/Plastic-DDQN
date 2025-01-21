@@ -55,9 +55,10 @@ class DDQN(BaseAgent):
         pred_q = cur_q.gather(1, act_idx).squeeze(1)
 
         with torch.no_grad():
+            ### Testing
             next_online_q, _ = online_model(next_obs_batch)
             next_target_q, _ = target_model(next_obs_batch)
-            next_act = torch.argmax(next_online_q, 1).reshape(-1,1)
+            next_act = torch.argmax(next_target_q, 1).reshape(-1,1)
             next_target_q = next_target_q.gather(1, next_act).squeeze(1)
             gamma = (self.cfg.gamma ** self.buffer.n_step)
             target_q = return_batch + (1 - done_batch) * gamma * next_target_q 
@@ -78,4 +79,3 @@ class DDQN(BaseAgent):
         targets = target_q
 
         return loss, preds, targets
-        

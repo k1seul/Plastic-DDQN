@@ -14,10 +14,10 @@ buffer:
     type: 'per_buffer'
     size: 1_000_000
     n_step: 1
-    prior_exp: 0.5 # ω
+    prior_exp: 0.0 # ω
     prior_weight_scheduler: # β
-        initial_value: 0.4
-        final_value: 1.0
+        initial_value: 0.0
+        final_value: 0.0
         step_size: None  # (num_timesteps - min_buffer_size) * optimize_per_step
 
 optimizer:
