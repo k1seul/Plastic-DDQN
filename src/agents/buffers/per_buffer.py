@@ -108,6 +108,9 @@ class SegmentTree():
     # Returns data given a data index
     def get(self, data_idxs):
         return [self.transitions[idx % self.size] for idx in data_idxs]
+    
+    def get_sum_tree_leaf(self, data_idx):
+        return self.sum_tree[self.tree_start + data_idx]
 
     def total(self):
         return self.sum_tree[0]
