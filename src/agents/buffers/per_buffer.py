@@ -94,7 +94,7 @@ class SegmentTree():
         elif children_indices[0, 0] >= self.tree_start:
             children_indices = np.minimum(children_indices, self.sum_tree.shape[0] - 1)
         left_children_values = self.sum_tree[children_indices[0]]
-        successor_choices = np.greater(values, left_children_values).astype(np.int32)  # Classify which values are in left or right branches
+        successor_choices = np.greater_equal(values, left_children_values).astype(np.int32)  # Classify which values are in left or right branches
         successor_indices = children_indices[successor_choices, np.arange(indices.size)] # Use classification to index into the indices matrix
         successor_values = values - successor_choices * left_children_values  # Subtract the left branch values when searching in the right branch
         return self._retrieve(successor_indices, successor_values)
