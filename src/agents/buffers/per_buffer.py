@@ -7,6 +7,30 @@ from src.common.train_utils import LinearScheduler
 from einops import rearrange
 
 
+class CircularBuffer:
+    def __init__(self, maxlen):
+        self.buffer = [None] * maxlen  # Pre-allocate fixed size
+        self.maxlen = maxlen
+        self.start = 0  # Points to the oldest element
+        self.size = 0   # Number of elements in the buffer
+
+    def append(self, value):
+        # Compute the index where the new element will be added
+        idx = (self.start + self.size) % self.maxlen
+        self.buffer[idx] = value
+
+        if self.size < self.maxlen:
+            # Increment size if not full
+            self.size += 1
+        else:
+            # Move start forward if full
+            self.start = (self.start + 1) % self.maxlen
+
+    def __getitem__(self, index):
+        if index < 0 or index >= self.size:
+            raise IndexError("Index out of bounds")
+        return self.buffer[index]
+
 # Segment tree data structure where parent node values are sum/max of children node values
 class SegmentTree():
     def __init__(self, size):
@@ -16,7 +40,7 @@ class SegmentTree():
         self.tree_start = 2**(size-1).bit_length()-1  # Put all used node leaves on last tree level
         self.sum_tree = np.zeros((self.tree_start + self.size,), dtype=np.float32)
         # Initialize the buffer
-        self.transitions = deque(maxlen=self.size)
+        self.transitions = CircularBuffer(maxlen=self.size)
         self.max = 1  # Initial max value to return (1 = 1^ω), default transition priority is set to max
 
      # Updates nodes values from current tree
@@ -70,7 +94,7 @@ class SegmentTree():
         elif children_indices[0, 0] >= self.tree_start:
             children_indices = np.minimum(children_indices, self.sum_tree.shape[0] - 1)
         left_children_values = self.sum_tree[children_indices[0]]
-        successor_choices = np.greater(values, left_children_values).astype(np.int32)  # Classify which values are in left or right branches
+        successor_choices = np.greater_equal(values, left_children_values).astype(np.int32)  # Classify which values are in left or right branches
         successor_indices = children_indices[successor_choices, np.arange(indices.size)] # Use classification to index into the indices matrix
         successor_values = values - successor_choices * left_children_values  # Subtract the left branch values when searching in the right branch
         return self._retrieve(successor_indices, successor_values)
@@ -84,6 +108,9 @@ class SegmentTree():
     # Returns data given a data index
     def get(self, data_idxs):
         return [self.transitions[idx % self.size] for idx in data_idxs]
+    
+    def get_sum_tree_leaf(self, data_idx):
+        return self.sum_tree[self.tree_start + data_idx]
 
     def total(self):
         return self.sum_tree[0]
