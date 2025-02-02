@@ -36,10 +36,12 @@ class PlasticityInjectionModel(nn.Module):
 
         # Process positive networks
         pos_outs = torch.stack([network.forward(x)[0] for network in self.pos_networks], dim=0).sum(dim=0)
+        self.pos_outs = pos_outs
 
         if self.neg_networks:
             # Process negative networks
             neg_outs = torch.stack([network.forward(x)[0] for network in self.neg_networks], dim=0).sum(dim=0)
+            self.neg_outs = neg_outs
             q = pos_outs - neg_outs
         else:
             q = pos_outs
@@ -68,12 +70,6 @@ class PlasticityInjectionModel(nn.Module):
 
         Args: online_model(nn.Module)
         """
-        for target_net, source_net in zip(self.pos_networks, online_model.pos_networks):
-            target_net.load_state_dict(source_net.state_dict())
-            for param in target_net.parameters():
-                param.requires_grad = False
-                
-        for target_net, source_net in zip(self.neg_networks, online_model.neg_networks):
-            target_net.load_state_dict(source_net.state_dict())
-            for param in target_net.parameters():
-                param.requires_grad = False
+        for online, target in zip(online_model.parameters(), self.parameters()):
+            target.data = online.data
+            target.requires_grad = False

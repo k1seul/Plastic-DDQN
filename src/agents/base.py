@@ -246,6 +246,7 @@ class BaseAgent(metaclass=ABCMeta):
                     # to reduce variability between target and online networks, copy online to target
                     if self.cfg.injection_frame and env_step == self.cfg.injection_frame:
                         online_model.plasticity_inject()
+                        target_model.plasticity_inject()
                         target_model.copy_online(online_model)
 
                     # reset
