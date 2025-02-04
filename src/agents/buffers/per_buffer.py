@@ -198,7 +198,8 @@ class PERBuffer(BaseBuffer):
         else:
             prior_weight = 1.0
 
-        weights = (1 / (probs * N) + 1e-5) ** prior_weight # importance sample weights
+        # 1e-5 might be too big
+        weights = (1 / (probs * N) + 1e-10) ** prior_weight # importance sample weights
         # re-normalise by max weight (make update scale consistent w.r.t learning rate)
         weights = weights / max(weights)
         weights = torch.FloatTensor(weights).to(self.device)

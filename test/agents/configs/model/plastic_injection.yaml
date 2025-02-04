@@ -1,0 +1,6 @@
+plastic_injection: True
+
+defaults:
+- backbone: nature
+- head: identity
+- policy: ddqn

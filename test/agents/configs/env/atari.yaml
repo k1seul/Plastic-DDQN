@@ -1,0 +1,8 @@
+type: 'atari'
+game: 'phoenix'
+frame_skip: 4
+frame: 4
+horizon: 27000
+repeat_action_probability: 0.25
+grayscale: True
+seed: None
