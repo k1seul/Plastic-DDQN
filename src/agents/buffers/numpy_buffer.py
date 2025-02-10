@@ -11,7 +11,6 @@ class NumpyExperience():
         self.size = size
         self.n_step = n_step
         self.frame_stack = frame_stack
-        self.full = False # Used to track actual capacity
         self.obs_transitions = np.zeros(shape=(self.size + self.n_step + self.frame_stack, 1, 84, 84), dtype=np.uint8) # for saving the final n_step states
         self.transitions = CircularBuffer(maxlen=self.size)
 
