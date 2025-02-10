@@ -1,7 +1,7 @@
 project_name: 'plastic'
 entity: 'k1seul_davian'
-group_name: 'test'
-exp_name: 'test'
+group_name: 'ddqn_injection'
+exp_name: '25M_injection'
 device: cuda:0
 seed: 0
 
