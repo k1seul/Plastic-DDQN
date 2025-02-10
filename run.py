@@ -73,7 +73,7 @@ def run(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument('--config_path', type=str,    default='./configs')
-    parser.add_argument('--config_name', type=str,    default='ddqn_injection')
+    parser.add_argument('--config_name', type=str,    default='ddqn_numpy')
     parser.add_argument('--overrides',   action='append', default=[])
     args = parser.parse_args()
 
