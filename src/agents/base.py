@@ -248,6 +248,7 @@ class BaseAgent(metaclass=ABCMeta):
                         online_model.plasticity_inject()
                         target_model.plasticity_inject()
                         target_model.copy_online(online_model)
+                        # the optimizer should be reinitialized so that it affects new parameters
                         self.optimizer = self._build_optimizer(online_model.parameters(), self.cfg.optimizer)
 
                     # reset
