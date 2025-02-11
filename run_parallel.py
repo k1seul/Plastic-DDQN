@@ -27,7 +27,8 @@ if __name__ == '__main__':
     parser.add_argument('--device_start',  type=int,     default=0)
     parser.add_argument('--num_devices',  type=int,     default=2)
     parser.add_argument('--num_exp_per_device',  type=int,  default=3)
-    parser.add_argument('--overrides',    type=str,     default=[],      nargs='*') 
+    parser.add_argument('--overrides',    type=str,     default=[],      nargs='*')
+    parser.add_argument('--injection_frame',    type=int,    default=0)
 
     args = vars(parser.parse_args())
     seeds = np.arange(args.pop('num_seeds'))
@@ -36,6 +37,7 @@ if __name__ == '__main__':
         seeds=_seeds
     games = list(atari_human_scores.keys())
     num_games = int(args.pop('num_games'))
+    injection_frame = args.pop('injection_frame')
 
     # manually set-up games
     _games = args.pop('games')
@@ -58,6 +60,8 @@ if __name__ == '__main__':
         exp['overrides'].append('exp_name=' + exp_name)
         exp['overrides'].append('seed=' + str(seed))
         exp['overrides'].append('env.game=' + str(game))
+        if injection_frame:
+            exp['overrides'].append('agent.injection_frame=' + str(injection_frame))
 
         experiments.append(exp)
         print(exp)
