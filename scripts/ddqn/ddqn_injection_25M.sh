@@ -10,4 +10,4 @@ python run_parallel.py \
     --num_devices 1 \
     --num_exp_per_device 3 \
     --games phoenix assault\
-    --injection_frame 6_250_000 
+    --injection_frame 6_250_000

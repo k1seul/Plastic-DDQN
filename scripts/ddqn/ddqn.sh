@@ -5,9 +5,9 @@ python run_parallel.py \
     --exp_name ddqn_baseline \
     --config_name ddqn \
     --config_path ./configs \
-    --seeds 0 1 \
+    --seeds 0 1 2\
     --num_games 26 \
     --num_devices 1 \
     --num_exp_per_device 3 \
-    --games phoenix \
+    --games phoenix assault \
 
