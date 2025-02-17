@@ -1,7 +1,7 @@
 # defaults
 #### Working on: just copyed drq.yaml and changed aug_types to []
 type: 'ddqn'
-num_timesteps: 50_000_000 # 50M agent step = 200M env step
+num_timesteps: 50_000_000 # 100k
 total_optimize_steps: None
 obs_shape: None
 action_size: None
@@ -11,9 +11,14 @@ mask_ratio: 0.0
 aug_target: True
 
 buffer: 
-    type: 'numpy_buffer'
+    type: 'per_buffer'
     size: 1_000_000
     n_step: 1
+    prior_exp: 0.5 # ω
+    prior_weight_scheduler: # β
+        initial_value: 0.4
+        final_value: 1.0
+        step_size: None  # (num_timesteps - min_buffer_size) * optimize_per_step
 
 optimizer:
     type: 'adam'
@@ -54,7 +59,7 @@ target_tau: 0
 update_state_dict: False
 
 # plastic_injection
-injection_frame: 6_250_000
+injection_frame: None
 
 # reset
 reset_per_optimize_step: -1 

@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from collections import deque
-from .base import BaseBuffer
+from .base import BaseBuffer, CircularBuffer
 from src.common.train_utils import LinearScheduler
 from einops import rearrange
 
@@ -16,7 +16,7 @@ class SegmentTree():
         self.tree_start = 2**(size-1).bit_length()-1  # Put all used node leaves on last tree level
         self.sum_tree = np.zeros((self.tree_start + self.size,), dtype=np.float32)
         # Initialize the buffer
-        self.transitions = deque(maxlen=self.size)
+        self.transitions = CircularBuffer(maxlen=self.size)
         self.max = 1  # Initial max value to return (1 = 1^ω), default transition priority is set to max
 
      # Updates nodes values from current tree
@@ -70,7 +70,7 @@ class SegmentTree():
         elif children_indices[0, 0] >= self.tree_start:
             children_indices = np.minimum(children_indices, self.sum_tree.shape[0] - 1)
         left_children_values = self.sum_tree[children_indices[0]]
-        successor_choices = np.greater(values, left_children_values).astype(np.int32)  # Classify which values are in left or right branches
+        successor_choices = np.greater_equal(values, left_children_values).astype(np.int32)  # Classify which values are in left or right branches
         successor_indices = children_indices[successor_choices, np.arange(indices.size)] # Use classification to index into the indices matrix
         successor_values = values - successor_choices * left_children_values  # Subtract the left branch values when searching in the right branch
         return self._retrieve(successor_indices, successor_values)
@@ -84,6 +84,9 @@ class SegmentTree():
     # Returns data given a data index
     def get(self, data_idxs):
         return [self.transitions[idx % self.size] for idx in data_idxs]
+    
+    def get_sum_tree_leaf(self, data_idx):
+        return self.sum_tree[self.tree_start + data_idx]
 
     def total(self):
         return self.sum_tree[0]
@@ -171,7 +174,8 @@ class PERBuffer(BaseBuffer):
         else:
             prior_weight = 1.0
 
-        weights = (1 / (probs * N) + 1e-5) ** prior_weight # importance sample weights
+        # 1e-5 might be too big
+        weights = (1 / (probs * N) + 1e-10) ** prior_weight # importance sample weights
         # re-normalise by max weight (make update scale consistent w.r.t learning rate)
         weights = weights / max(weights)
         weights = torch.FloatTensor(weights).to(self.device)

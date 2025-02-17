@@ -1,0 +1,12 @@
+project_name: 'plastic'
+entity: 'k1seul_davian'
+group_name: 'baseline'
+exp_name: 'baseline'
+device: cuda:0
+seed: 0
+
+defaults:
+- _self_
+- agent: ddqn_numpy
+- env: atari
+- model: nature

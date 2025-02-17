@@ -236,17 +236,20 @@ class BaseAgent(metaclass=ABCMeta):
                     # you should update the state_dict not parameters
                     if env_step % self.cfg.target_update_freq == 0:
                         for online, target in zip(online_model.parameters(), target_model.parameters()):
-                            target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
+                            target.data[:] = self.cfg.target_tau * target.data[:] + (1 - self.cfg.target_tau) * online.data[:]
 
                     if self.cfg.update_state_dict:
                         for online, target in zip(online_model.buffers(), target_model.buffers()):
-                            target.data = self.cfg.target_tau * target.data + (1 - self.cfg.target_tau) * online.data
+                            target.data[:] = self.cfg.target_tau * target.data[:] + (1 - self.cfg.target_tau) * online.data[:]
 
                     # plasticity injection 
                     # to reduce variability between target and online networks, copy online to target
                     if self.cfg.injection_frame and env_step == self.cfg.injection_frame:
                         online_model.plasticity_inject()
+                        target_model.plasticity_inject()
                         target_model.copy_online(online_model)
+                        # the optimizer should be reinitialized so that it affects new parameters
+                        self.optimizer = self._build_optimizer(online_model.parameters(), self.cfg.optimizer)
 
                     # reset
                     # 1. decide reset model (original vs random) 
