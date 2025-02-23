@@ -1,3 +1,9 @@
+## Plasticity injection reimplementation final results
+
+![Image](https://github.com/user-attachments/assets/2b493b6a-a366-4d06-be36-c02dd1c89006)
+
+plasticity injection implemented. For some reason 10M injection seems to work best. 
+
 # Atari-100k
 
 ## Requirements
