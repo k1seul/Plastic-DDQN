@@ -1,6 +1,14 @@
 # Reimplementation of Plasticity Injection
 From: [Deep Reinforcement Learning with Plasticity Injection](https://arxiv.org/abs/2305.15555)
 
+Re-implemented the paper "Deep Reinforcement Learning with Plasticity Injection"
+in my GitHub codebase. This project explores how neural networks in reinforcement
+learning can lose their ability to learn from new data (plasticity loss) when trained in
+dynamic environments. This loss of plasticity in neural networks hinders their ability
+to effectively perform continual learning, as they struggle to adapt to new data over
+time. The paper proposes plasticity injection, a simple yet effective method that en-
+hances network plasticity without changing the total number of trainable parameters.
+
 ## Plasticity injection reimplementation final results
 
 ![Image](https://github.com/user-attachments/assets/2b493b6a-a366-4d06-be36-c02dd1c89006)
