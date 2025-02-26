@@ -1,10 +1,11 @@
+# Reimplementation of Plasticity Injection
+From: [Deep Reinforcement Learning with Plasticity Injection](https://arxiv.org/abs/2305.15555)
+
 ## Plasticity injection reimplementation final results
 
 ![Image](https://github.com/user-attachments/assets/2b493b6a-a366-4d06-be36-c02dd1c89006)
 
 plasticity injection implemented. For some reason 10M injection seems to work best. 
-
-# Atari-100k
 
 ## Requirements
 We assume you have access to a GPU that can run CUDA 11.1 and CUDNN 8. 
@@ -42,21 +43,19 @@ python -m atari_py.import_roms rars
 
 ## Instructions
 
-To run a single run, use the `run.py` script
+To run a single run without injection, use the `run.py` script
 ```
 python run.py 
 ```
 
-To run the Atari-100k benchmark (26 games with 5 random sees), use `run_parallel.py` script
+To run the Atari-100k benchmark without injection (26 games with 5 random sees), use `run_parallel.py` script
 ```
 python run_parallel.py
 ```
 
-To reproduce the performance of PLASTIC* or PLASTIC, use scripts inside the `script`.
+To reproduce the performance of plasticitiy injection, use scripts inside the `script`.
 ```
-bash scripts/NeurIPS2023/drq_plastic_dagger_rr2.sh
-
-bash scripts/NeurIPS2023/drq_plastic_rr2.sh
+bash scripts/ddqn/ddqn_injection_{Injection step}M.sh
 ```
 
 
